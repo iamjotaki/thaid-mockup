@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="th" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>ThaiD Mockup AI Studio — ถ่ายภาพสินค้า & สตูดิโอม็อกอัพเสมือนจริง</title>
+  <meta name="description" content="สตูดิโอถ่ายภาพสินค้าและม็อกอัพระดับลักชัวรีด้วย AI ไดคัตพื้นหลังอัตโนมัติ จัดวางฉากหลังพรีเมียม สังเคราะห์แสงเงาเสมือนจริง สำหรับ Shopee, Lazada, TikTok และ Facebook">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fef2ee',
+              100: '#fde5dc',
+              500: '#e85a2d',
+              600: '#d64f24',
+              700: '#b83e1a',
+            },
+            apple: {
+              blue: '#0071e3',
+              dark: '#0c0c0e',
+              card: '#161619',
+              light: '#f5f5f7'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Prompt', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Antialiasing & Smooth transitions */
+    * { -webkit-font-smoothing: antialiased; }
+    
+    /* Checkerboard for transparent PNG preview */
+    .bg-checker {
+      background-image: 
+        linear-gradient(45deg, rgba(120, 120, 120, 0.15) 25%, transparent 25%), 
+        linear-gradient(-45deg, rgba(120, 120, 120, 0.15) 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, rgba(120, 120, 120, 0.15) 75%), 
+        linear-gradient(-45deg, transparent 75%, rgba(120, 120, 120, 0.15) 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    }
+    
+    /* Glassmorphism */
+    .frosted-bar {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(140, 140, 140, 0.3); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(140, 140, 140, 0.5); }
+  </style>
+</head>
+<body class="bg-[#f5f5f7] dark:bg-[#0c0c0e] text-[#1d1d1f] dark:text-[#f5f5f7] min-h-screen flex flex-col font-sans transition-colors duration-200">
+
+  <!-- ==================== HEADER (h-[52px] Frosted Cupertino Bar) ==================== -->
+  <header class="sticky top-0 z-50 h-[52px] border-b border-black/5 dark:border-white/10 bg-white/80 dark:bg-[#0c0c0e]/80 frosted-bar">
+    <div class="max-w-7xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="https://thaid.online" class="flex items-center gap-2.5 group">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-500 to-amber-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-[19px]">photo_camera</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-sm tracking-tight leading-none flex items-center gap-1.5">
+            ThaiD <span class="text-brand-500">Mockup AI</span>
+            <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded-full bg-brand-500/10 text-brand-500 font-semibold border border-brand-500/20">Studio</span>
+          </span>
+          <span class="text-[10px] text-stone-500 dark:text-stone-400 font-medium leading-tight">Product Photography</span>
+        </div>
+      </a>
+
+      <!-- Center Segmented Nav Pills (Ecosystem Standard) -->
+      <nav class="hidden xl:flex items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-xl text-xs font-medium">
+        <a href="https://thaid.online" class="px-2.5 py-1 rounded-lg text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">home</span>
+          <span>Hub</span>
+        </a>
+        <a href="https://novel.thaid.online" class="px-2.5 py-1 rounded-lg text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">edit_note</span>
+          <span>นิยาย AI</span>
+        </a>
+        <a href="https://social.thaid.online" class="px-2.5 py-1 rounded-lg text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">campaign</span>
+          <span>โพสต์ FB</span>
+        </a>
+        <a href="https://sticker.thaid.online" class="px-2.5 py-1 rounded-lg text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">sentiment_satisfied</span>
+          <span>สติกเกอร์</span>
+        </a>
+        <a href="https://clip.thaid.online" class="px-2.5 py-1 rounded-lg text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">movie</span>
+          <span>คลิปสั้น AI</span>
+        </a>
+        <a href="https://chat.thaid.online" class="px-2.5 py-1 rounded-lg text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">forum</span>
+          <span>แชทบอท LINE</span>
+        </a>
+        <a href="https://mockup.thaid.online" class="px-2.5 py-1 rounded-lg bg-white dark:bg-white/10 text-brand-500 font-semibold shadow-xs flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">photo_camera</span>
+          <span>ม็อกอัพสินค้า</span>
+        </a>
+      </nav>
+
+      <!-- Right Controls: Dark Mode Toggle & Hub Link -->
+      <div class="flex items-center gap-2">
+        <button id="themeToggleBtn" type="button" class="w-8 h-8 rounded-lg flex items-center justify-center border border-black/5 dark:border-white/10 text-stone-600 dark:text-stone-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors" title="สลับธีม">
+          <span class="material-symbols-outlined text-[18px]" id="themeIcon">light_mode</span>
+        </button>
+
+        <a href="https://vault.thaid.online" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-500 text-white hover:bg-brand-600 transition-colors shadow-xs">
+          <span class="material-symbols-outlined text-[15px]">lock</span>
+          <span>ThaiD Vault</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==================== MAIN STUDIO CONTENT ==================== -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 flex flex-col gap-6">
+
+    <!-- Top Headline Banner -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-black/5 dark:border-white/10">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[#1d1d1f] dark:text-white flex items-center gap-2">
+          <span>AI Product Mockup & Photography Studio</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium border border-emerald-500/20">Live Production</span>
+        </h1>
+        <p class="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1">
+          เปลี่ยนภาพถ่ายสินค้าธรรมดาให้เป็นภาพถ่ายสตูดิโอระดับลักชัวรี ไดคัตเนียนกริบ สังเคราะห์แสงเงา และสร้างฉากหลังพรีเมียมในคลิกเดียว
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="quickDemoBtn" type="button" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-brand-500/30 text-brand-500 hover:bg-brand-500/10 transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px]">bolt</span>
+          <span>เดโม่ 1 คลิก</span>
+        </button>
+        <span class="text-xs font-mono text-stone-400">Port 8096</span>
+      </div>
+    </div>
+
+    <!-- Workspace Grid: Left Controls (5 cols) & Right Preview (7 cols) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- ==================== LEFT CONTROL PANEL (5 cols) ==================== -->
+      <div class="lg:col-span-5 flex flex-col gap-5">
+
+        <!-- Step 1: Product Selection & Cutout Card -->
+        <div class="bg-white dark:bg-[#161619] rounded-2xl border border-black/5 dark:border-white/10 p-4 sm:p-5 shadow-xs">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-brand-500/10 text-brand-500 flex items-center justify-center font-bold text-xs">1</span>
+              <h2 class="font-bold text-sm">เลือกหรืออัปโหลดสินค้า (Product Cutout)</h2>
+            </div>
+            <span id="cutoutStatusBadge" class="text-[11px] px-2 py-0.5 rounded-full bg-stone-100 dark:bg-white/5 text-stone-500">พร้อมใช้งาน</span>
+          </div>
+
+          <!-- File Drop Zone -->
+          <div id="dropZone" class="border-2 border-dashed border-stone-300 dark:border-stone-700 hover:border-brand-500 rounded-xl p-4 text-center cursor-pointer transition-colors group relative bg-stone-50/50 dark:bg-white/[0.02]">
+            <input type="file" id="fileInput" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+            <div class="flex flex-col items-center gap-1.5 pointer-events-none">
+              <span class="material-symbols-outlined text-[28px] text-stone-400 group-hover:text-brand-500 transition-colors">cloud_upload</span>
+              <span class="text-xs font-semibold text-stone-700 dark:text-stone-300">ลากไฟล์สินค้ามาวาง หรือ คลิกเพื่อเลือกรูปภาพ</span>
+              <span class="text-[11px] text-stone-400">รองรับ PNG, JPG, WebP (ระบบจะตัดฉากหลังอัตโนมัติ)</span>
+            </div>
+          </div>
+
+          <!-- Quick Samples Selector -->
+          <div class="mt-3.5">
+            <div class="text-[11px] font-semibold text-stone-500 dark:text-stone-400 mb-2 flex items-center justify-between">
+              <span>หรือเลือกสินค้าตัวอย่าง (1-Click Test):</span>
+              <span class="text-[10px] text-brand-500">PNG ไดคัตแล้ว</span>
+            </div>
+            <div id="samplesList" class="grid grid-cols-5 gap-2">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Cutout Preview Thumb -->
+          <div id="cutoutPreviewBox" class="mt-3.5 p-2 rounded-xl bg-checker border border-black/5 dark:border-white/10 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <img id="activeProductThumb" src="/samples/skincare_serum.png" alt="Product Cutout" class="w-12 h-12 object-contain rounded-lg">
+              <div class="flex flex-col">
+                <span id="activeProductName" class="text-xs font-semibold truncate max-w-[180px]">เซรั่มขวดแก้วสีอำพัน</span>
+                <span id="activeProductDims" class="text-[10px] text-stone-400 font-mono">Transparent Cutout</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-semibold text-emerald-500 px-2 py-0.5 rounded-full bg-emerald-500/10">Active</span>
+          </div>
+        </div>
+
+        <!-- Step 2: Scene & Environment Preset Selection -->
+        <div class="bg-white dark:bg-[#161619] rounded-2xl border border-black/5 dark:border-white/10 p-4 sm:p-5 shadow-xs">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-brand-500/10 text-brand-500 flex items-center justify-center font-bold text-xs">2</span>
+              <h2 class="font-bold text-sm">เลือกฉากหลังพรีเมียม (Luxury Scene)</h2>
+            </div>
+            <div class="flex items-center gap-1 text-[11px]">
+              <button id="tabPresetsBtn" class="px-2 py-0.5 rounded-lg bg-brand-500 text-white font-medium">ฉากพรีเซ็ต</button>
+              <button id="tabCustomBtn" class="px-2 py-0.5 rounded-lg text-stone-500 hover:text-black dark:hover:text-white font-medium">พิมพ์ AI Prompt</button>
+            </div>
+          </div>
+
+          <!-- Presets Grid -->
+          <div id="presetsContainer" class="flex flex-col gap-2">
+            <div id="presetsGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-[260px] overflow-y-auto pr-1">
+              <!-- Rendered via JS -->
+            </div>
+            <div id="activePresetDesc" class="text-[11px] text-stone-500 dark:text-stone-400 mt-1 italic">
+              โต๊ะหินอ่อน Carrara สีขาว ในคาเฟ่หรู มีแสงแดดยามเช้าและโบเก้อบอุ่น
+            </div>
+          </div>
+
+          <!-- Custom AI Prompt Section (Hidden by default) -->
+          <div id="customPromptContainer" class="hidden flex flex-col gap-2.5">
+            <div class="relative">
+              <textarea id="customPromptInput" rows="3" class="w-full text-xs p-3 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-black/30 focus:border-brand-500 focus:outline-none resize-none" placeholder="บรรยายฉากหลังที่ต้องการ เช่น บนเคาน์เตอร์หินแกรนิตสีดำในครัวโมเดิร์น แสงไฟสปอร์ตไลท์ส่องลงมา"></textarea>
+            </div>
+
+            <!-- Quick inspiration chips -->
+            <div class="flex flex-wrap gap-1.5">
+              <button type="button" class="prompt-chip text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-white/5 hover:bg-brand-500/10 text-stone-600 dark:text-stone-400 hover:text-brand-500 transition-colors">โต๊ะไม้ริมหน้าต่างฝนตก</button>
+              <button type="button" class="prompt-chip text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-white/5 hover:bg-brand-500/10 text-stone-600 dark:text-stone-400 hover:text-brand-500 transition-colors">หินลาวาสีดำริมน้ำตก</button>
+              <button type="button" class="prompt-chip text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-white/5 hover:bg-brand-500/10 text-stone-600 dark:text-stone-400 hover:text-brand-500 transition-colors">แท่นแก้วในอวกาศ แสงนีออน</button>
+            </div>
+
+            <button id="generateSceneBtn" type="button" class="w-full py-2 rounded-xl text-xs font-semibold bg-stone-800 dark:bg-white/10 hover:bg-stone-900 text-white transition-all flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[15px]">auto_awesome</span>
+              <span>เจนเนอเรตฉากใหม่ด้วย AI</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Studio Tuning Sliders -->
+        <div class="bg-white dark:bg-[#161619] rounded-2xl border border-black/5 dark:border-white/10 p-4 sm:p-5 shadow-xs">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-brand-500/10 text-brand-500 flex items-center justify-center font-bold text-xs">3</span>
+              <h2 class="font-bold text-sm">ปรับตำแหน่ง แสงเงา และขนาด (Fine-Tuning)</h2>
+            </div>
+            <span class="text-[10px] font-mono text-stone-400">Pro Tuning</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+            
+            <!-- Scale Slider -->
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between text-stone-500 dark:text-stone-400">
+                <span>ขนาดสินค้า (Scale)</span>
+                <span id="scaleVal" class="font-mono font-semibold text-brand-500">58%</span>
+              </div>
+              <input id="scaleSlider" type="range" min="30" max="85" value="58" class="w-full accent-brand-500 cursor-pointer">
+            </div>
+
+            <!-- Shadow Intensity Slider -->
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between text-stone-500 dark:text-stone-400">
+                <span>ความเข้มเงา (Shadow)</span>
+                <span id="shadowVal" class="font-mono font-semibold text-brand-500">65%</span>
+              </div>
+              <input id="shadowSlider" type="range" min="10" max="100" value="65" class="w-full accent-brand-500 cursor-pointer">
+            </div>
+
+            <!-- Position Y (Vertical Anchor) -->
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between text-stone-500 dark:text-stone-400">
+                <span>ระดับพื้นวาง (Ground Y)</span>
+                <span id="posYVal" class="font-mono font-semibold text-brand-500">72%</span>
+              </div>
+              <input id="posYSlider" type="range" min="50" max="90" value="72" class="w-full accent-brand-500 cursor-pointer">
+            </div>
+
+            <!-- Aspect Ratio Selector -->
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between text-stone-500 dark:text-stone-400">
+                <span>อัตราส่วน (Aspect Ratio)</span>
+              </div>
+              <div class="grid grid-cols-3 gap-1">
+                <button type="button" data-ratio="1:1" class="ratio-btn px-2 py-1 rounded-lg border text-[11px] font-semibold bg-brand-500 border-brand-500 text-white">1:1</button>
+                <button type="button" data-ratio="4:5" class="ratio-btn px-2 py-1 rounded-lg border text-[11px] font-semibold border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400">4:5</button>
+                <button type="button" data-ratio="9:16" class="ratio-btn px-2 py-1 rounded-lg border text-[11px] font-semibold border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400">9:16</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Main Composite Button -->
+          <div class="mt-4 pt-4 border-t border-black/5 dark:border-white/10">
+            <button id="renderMockupBtn" type="button" class="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-500 to-amber-500 hover:from-brand-600 hover:to-amber-600 text-white shadow-lg shadow-brand-500/25 transition-all flex items-center justify-center gap-2 group">
+              <span class="material-symbols-outlined text-[19px] group-hover:rotate-12 transition-transform">photo_camera</span>
+              <span id="renderBtnText">เรนเดอร์ภาพม็อกอัพ HD (Composite Mockup)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ==================== RIGHT PREVIEW & STAGE (7 cols) ==================== -->
+      <div class="lg:col-span-7 flex flex-col gap-4">
+
+        <!-- Stage Card -->
+        <div class="bg-white dark:bg-[#161619] rounded-2xl border border-black/5 dark:border-white/10 p-4 sm:p-5 shadow-xs flex flex-col gap-3">
+          
+          <!-- Stage Top Bar -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-brand-500 text-[20px]">view_in_ar</span>
+              <span class="font-bold text-sm">สตูดิโอพรีวิว (Live Studio Preview)</span>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <span id="renderMetaBadge" class="text-[11px] font-mono text-stone-400">1080×1080 HD</span>
+              <button id="viewToggleBtn" type="button" class="px-2.5 py-1 rounded-lg text-xs font-medium border border-black/5 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors flex items-center gap-1 text-stone-500">
+                <span class="material-symbols-outlined text-[14px]">compare</span>
+                <span>ฉากเปล่า / สินค้า</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Main Visual Stage Canvas Viewport -->
+          <div class="relative w-full aspect-square max-h-[580px] rounded-xl overflow-hidden bg-stone-900 border border-black/10 dark:border-white/10 flex items-center justify-center group shadow-inner">
+            
+            <!-- Rendered Composite Image -->
+            <img id="mainStageImg" src="/presets/cafe_marble.jpg" alt="Mockup Preview" class="w-full h-full object-cover transition-opacity duration-300">
+            
+            <!-- Loading Overlay -->
+            <div id="stageLoadingOverlay" class="absolute inset-0 bg-black/70 backdrop-blur-xs hidden flex-col items-center justify-center gap-3 text-white z-20">
+              <div class="w-10 h-10 border-3 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+              <div class="flex flex-col items-center">
+                <span id="loadingMsg" class="font-bold text-sm">กำลังเรนเดอร์ภาพม็อกอัพ...</span>
+                <span class="text-[11px] text-stone-300">ตัดขอบสินค้า สังเคราะห์แสงเงา และเกลี่ยโทนสี</span>
+              </div>
+            </div>
+
+            <!-- Floating Resolution Badge -->
+            <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white text-[10px] font-mono flex items-center gap-1.5 border border-white/10">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="stageRatioLabel">1080 × 1080 (1:1 Square)</span>
+            </div>
+
+          </div>
+
+          <!-- Download Action Bar -->
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-2 border-t border-black/5 dark:border-white/10">
+            <div class="text-[11px] text-stone-500 dark:text-stone-400">
+              ✓ ไฟล์คุณภาพสูง ไม่มีลายน้ำ พร้อมลง Shopee, Lazada, TikTok Shop
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <a id="downloadCutoutBtn" href="/samples/skincare_serum.png" download="product_cutout.png" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-semibold border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-center flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-[15px]">download</span>
+                <span>โหลดภาพไดคัต PNG</span>
+              </a>
+              <a id="downloadMockupBtn" href="/presets/cafe_marble.jpg" download="thaid_mockup.jpg" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/20 transition-all text-center flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">download</span>
+                <span>ดาวน์โหลดภาพม็อกอัพ HD</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Recent Render Gallery Strip -->
+        <div class="bg-white dark:bg-[#161619] rounded-2xl border border-black/5 dark:border-white/10 p-4 shadow-xs flex flex-col gap-2.5">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-xs flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-brand-500 text-[16px]">history</span>
+              <span>ประวัติการเรนเดอร์ในเซสชันนี้ (Recent Renders)</span>
+            </span>
+            <span id="galleryCount" class="text-[10px] font-mono text-stone-400">0 ภาพ</span>
+          </div>
+
+          <div id="galleryStrip" class="flex items-center gap-2.5 overflow-x-auto py-1">
+            <div class="text-[11px] text-stone-400 py-3 italic">ยังไม่มีภาพในเซสชัน กดปุ่ม "เรนเดอร์ภาพม็อกอัพ HD" เพื่อเริ่มต้น</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="border-t border-black/5 dark:border-white/10 py-6 mt-12 bg-white/50 dark:bg-black/20 text-xs text-stone-500 dark:text-stone-400 text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-[#1d1d1f] dark:text-white">ThaiD Mockup AI Studio</span>
+        <span>•</span>
+        <span>Part of <a href="https://thaid.online" class="text-brand-500 hover:underline">ThaiD.online Ecosystem</a></span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span>Hosted on Oracle Cloud Always Free (ARM Ampere)</span>
+        <span>•</span>
+        <a href="https://vault.thaid.online" class="hover:text-brand-500 transition-colors">ThaiD Vault</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT APP LOGIC ==================== -->
+  <script>
+    // State management
+    const state = {
+      productType: 'sample',         // 'sample', 'custom_id', 'base64'
+      productId: 'skincare_serum.png',
+      productName: 'เซรั่มขวดแก้วสีอำพัน',
+      productUrl: '/samples/skincare_serum.png',
+      sceneType: 'preset',           // 'preset' or 'custom'
+      sceneId: 'cafe_marble',
+      aspectRatio: '1:1',
+      scale: 0.58,
+      shadowIntensity: 0.65,
+      shadowType: 'soft_contact',
+      posY: 0.72,
+      posX: 0.50,
+      recentRenders: []
+    };
+
+    // Dark Mode Toggle
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    function initTheme() {
+      if (localStorage.getItem('thaid-theme') === 'light') {
+        document.documentElement.classList.remove('dark');
+        themeIcon.textContent = 'dark_mode';
+      } else {
+        document.documentElement.classList.add('dark');
+        themeIcon.textContent = 'light_mode';
+      }
+    }
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('thaid-theme', isDark ? 'dark' : 'light');
+      themeIcon.textContent = isDark ? 'light_mode' : 'dark_mode';
+    });
+    initTheme();
+
+    // DOM Elements
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const samplesList = document.getElementById('samplesList');
+    const presetsGrid = document.getElementById('presetsGrid');
+    const activePresetDesc = document.getElementById('activePresetDesc');
+    const activeProductThumb = document.getElementById('activeProductThumb');
+    const activeProductName = document.getElementById('activeProductName');
+    const cutoutStatusBadge = document.getElementById('cutoutStatusBadge');
+    const mainStageImg = document.getElementById('mainStageImg');
+    const stageLoadingOverlay = document.getElementById('stageLoadingOverlay');
+    const loadingMsg = document.getElementById('loadingMsg');
+    const renderMockupBtn = document.getElementById('renderMockupBtn');
+    const renderBtnText = document.getElementById('renderBtnText');
+    const downloadMockupBtn = document.getElementById('downloadMockupBtn');
+    const downloadCutoutBtn = document.getElementById('downloadCutoutBtn');
+    const galleryStrip = document.getElementById('galleryStrip');
+    const galleryCount = document.getElementById('galleryCount');
+    const stageRatioLabel = document.getElementById('stageRatioLabel');
+
+    // Tab Switchers for Preset vs Custom Scene
+    const tabPresetsBtn = document.getElementById('tabPresetsBtn');
+    const tabCustomBtn = document.getElementById('tabCustomBtn');
+    const presetsContainer = document.getElementById('presetsContainer');
+    const customPromptContainer = document.getElementById('customPromptContainer');
+
+    tabPresetsBtn.addEventListener('click', () => {
+      tabPresetsBtn.className = "px-2 py-0.5 rounded-lg bg-brand-500 text-white font-medium";
+      tabCustomBtn.className = "px-2 py-0.5 rounded-lg text-stone-500 hover:text-black dark:hover:text-white font-medium";
+      presetsContainer.classList.remove('hidden');
+      customPromptContainer.classList.add('hidden');
+      state.sceneType = 'preset';
+    });
+
+    tabCustomBtn.addEventListener('click', () => {
+      tabCustomBtn.className = "px-2 py-0.5 rounded-lg bg-brand-500 text-white font-medium";
+      tabPresetsBtn.className = "px-2 py-0.5 rounded-lg text-stone-500 hover:text-black dark:hover:text-white font-medium";
+      customPromptContainer.classList.remove('hidden');
+      presetsContainer.classList.add('hidden');
+      state.sceneType = 'custom';
+    });
+
+    // Tuning Sliders
+    const scaleSlider = document.getElementById('scaleSlider');
+    const scaleVal = document.getElementById('scaleVal');
+    scaleSlider.addEventListener('input', (e) => {
+      state.scale = parseInt(e.target.value) / 100.0;
+      scaleVal.textContent = `${e.target.value}%`;
+    });
+
+    const shadowSlider = document.getElementById('shadowSlider');
+    const shadowVal = document.getElementById('shadowVal');
+    shadowSlider.addEventListener('input', (e) => {
+      state.shadowIntensity = parseInt(e.target.value) / 100.0;
+      shadowVal.textContent = `${e.target.value}%`;
+    });
+
+    const posYSlider = document.getElementById('posYSlider');
+    const posYVal = document.getElementById('posYVal');
+    posYSlider.addEventListener('input', (e) => {
+      state.posY = parseInt(e.target.value) / 100.0;
+      posYVal.textContent = `${e.target.value}%`;
+    });
+
+    // Aspect Ratio Buttons
+    document.querySelectorAll('.ratio-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.ratio-btn').forEach(b => {
+          b.className = "ratio-btn px-2 py-1 rounded-lg border text-[11px] font-semibold border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400";
+        });
+        btn.className = "ratio-btn px-2 py-1 rounded-lg border text-[11px] font-semibold bg-brand-500 border-brand-500 text-white";
+        state.aspectRatio = btn.dataset.ratio;
+        updateStageRatioBadge();
+      });
+    });
+
+    function updateStageRatioBadge() {
+      const labels = {
+        '1:1': '1080 × 1080 (1:1 Square)',
+        '4:5': '1080 × 1350 (4:5 Portrait)',
+        '9:16': '1080 × 1920 (9:16 Vertical)'
+      };
+      stageRatioLabel.textContent = labels[state.aspectRatio] || '1080 × 1080';
+    }
+
+    // Load Initial Samples
+    async function loadSamples() {
+      try {
+        const res = await fetch('/api/samples');
+        const data = await res.json();
+        if (data.ok && data.samples) {
+          samplesList.innerHTML = '';
+          data.samples.forEach((s, idx) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            const isActive = idx === 0;
+            btn.className = `p-1 rounded-xl border flex flex-col items-center gap-1 transition-all group bg-checker ${isActive ? 'border-brand-500 ring-2 ring-brand-500/20' : 'border-black/5 dark:border-white/10 hover:border-brand-500/50'}`;
+            btn.innerHTML = `
+              <img src="${s.url}" alt="${s.name}" class="w-10 h-10 object-contain group-hover:scale-105 transition-transform">
+              <span class="text-[9px] truncate max-w-[50px] text-stone-600 dark:text-stone-400">${s.category}</span>
+            `;
+            btn.addEventListener('click', () => {
+              document.querySelectorAll('#samplesList button').forEach(b => b.className = b.className.replace('border-brand-500 ring-2 ring-brand-500/20', 'border-black/5 dark:border-white/10'));
+              btn.className = btn.className.replace('border-black/5 dark:border-white/10', 'border-brand-500 ring-2 ring-brand-500/20');
+              
+              state.productType = 'sample';
+              state.productId = s.id;
+              state.productName = s.name;
+              state.productUrl = s.url;
+              activeProductThumb.src = s.url;
+              activeProductName.textContent = s.name;
+              downloadCutoutBtn.href = s.url;
+              cutoutStatusBadge.textContent = "เลือกตัวอย่างแล้ว";
+              cutoutStatusBadge.className = "text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500";
+            });
+            samplesList.appendChild(btn);
+          });
+        }
+      } catch (e) {
+        console.error('Failed to load samples:', e);
+      }
+    }
+
+    // Load Initial Presets
+    async function loadPresets() {
+      try {
+        const res = await fetch('/api/templates');
+        const data = await res.json();
+        if (data.ok && data.templates) {
+          presetsGrid.innerHTML = '';
+          data.templates.forEach((t, idx) => {
+            const card = document.createElement('div');
+            const isActive = idx === 0;
+            card.className = `relative rounded-xl overflow-hidden cursor-pointer border transition-all group ${isActive ? 'border-brand-500 ring-2 ring-brand-500/30' : 'border-black/5 dark:border-white/10 hover:border-brand-500/50'}`;
+            card.innerHTML = `
+              <img src="${t.preview_url}" alt="${t.name}" class="w-full h-16 object-cover group-hover:scale-105 transition-transform">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-1.5 text-white">
+                <span class="text-[10px] font-bold leading-tight truncate">${t.name_th}</span>
+                <span class="text-[8px] text-stone-300 font-mono">${t.category}</span>
+              </div>
+            `;
+            card.addEventListener('click', () => {
+              document.querySelectorAll('#presetsGrid > div').forEach(c => c.className = c.className.replace('border-brand-500 ring-2 ring-brand-500/30', 'border-black/5 dark:border-white/10'));
+              card.className = card.className.replace('border-black/5 dark:border-white/10', 'border-brand-500 ring-2 ring-brand-500/30');
+              
+              state.sceneType = 'preset';
+              state.sceneId = t.id;
+              state.shadowType = t.shadow_type || 'soft_contact';
+              activePresetDesc.textContent = t.description;
+              
+              // Preview preset backdrop on stage immediately
+              mainStageImg.src = t.preview_url;
+            });
+            presetsGrid.appendChild(card);
+          });
+        }
+      } catch (e) {
+        console.error('Failed to load presets:', e);
+      }
+    }
+
+    // File Upload & Background Removal
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      cutoutStatusBadge.textContent = "กำลังไดคัต AI...";
+      cutoutStatusBadge.className = "text-[11px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 animate-pulse";
+      
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/api/remove-bg', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data.ok) {
+          state.productType = 'custom_id';
+          state.productId = data.product_id;
+          state.productName = file.name;
+          state.productUrl = data.url;
+
+          activeProductThumb.src = data.base64 || data.url;
+          activeProductName.textContent = file.name;
+          downloadCutoutBtn.href = data.url;
+
+          cutoutStatusBadge.textContent = "ไดคัตสำเร็จ (Cutout OK)";
+          cutoutStatusBadge.className = "text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500";
+        }
+      } catch (err) {
+        console.error('Cutout failed:', err);
+        cutoutStatusBadge.textContent = "เกิดข้อผิดพลาด";
+        cutoutStatusBadge.className = "text-[11px] px-2 py-0.5 rounded-full bg-red-500/10 text-red-500";
+      }
+    });
+
+    // Custom Scene Prompt Generation
+    const generateSceneBtn = document.getElementById('generateSceneBtn');
+    const customPromptInput = document.getElementById('customPromptInput');
+    generateSceneBtn.addEventListener('click', async () => {
+      const prompt = customPromptInput.value.trim();
+      if (!prompt) return alert('กรุณาระบุคำบรรยายฉากที่ต้องการ');
+
+      showLoading(true, "กำลังเจนเนอเรตฉากหลังด้วย AI...");
+      try {
+        const res = await fetch('/api/generate-scene', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ prompt, style_preset: state.sceneId })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          state.sceneType = 'custom';
+          state.sceneId = data.scene_id;
+          mainStageImg.src = data.url;
+        }
+      } catch (err) {
+        alert('เกิดข้อผิดพลาดในการเจนเนอเรตฉาก: ' + err.message);
+      } finally {
+        showLoading(false);
+      }
+    });
+
+    // Prompt Chips Click Handlers
+    document.querySelectorAll('.prompt-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        customPromptInput.value = chip.textContent;
+      });
+    });
+
+    // Render Mockup Action (Main Composite Engine)
+    renderMockupBtn.addEventListener('click', async () => {
+      showLoading(true, "กำลังซ้อนภาพ สังเคราะห์เงา และปรับแสง (AI Rendering)...");
+
+      const payload = {
+        product_type: state.productType,
+        product_id: state.productId,
+        scene_type: state.sceneType,
+        scene_id: state.sceneId,
+        aspect_ratio: state.aspectRatio,
+        scale: state.scale,
+        pos_x: state.posX,
+        pos_y: state.posY,
+        shadow_intensity: state.shadowIntensity,
+        shadow_type: state.shadowType
+      };
+
+      try {
+        const res = await fetch('/api/composite', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.ok) {
+          mainStageImg.src = data.url;
+          downloadMockupBtn.href = data.url;
+          downloadMockupBtn.download = data.filename;
+
+          // Add to recent renders
+          addToGallery(data);
+        } else {
+          alert('Composite error: ' + (data.detail || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Render failed: ' + err.message);
+      } finally {
+        showLoading(false);
+      }
+    });
+
+    function showLoading(show, msg = "กำลังเรนเดอร์...") {
+      loadingMsg.textContent = msg;
+      if (show) {
+        stageLoadingOverlay.classList.remove('hidden');
+        stageLoadingOverlay.classList.add('flex');
+        renderMockupBtn.disabled = true;
+        renderBtnText.textContent = "กำลังเรนเดอร์...";
+      } else {
+        stageLoadingOverlay.classList.add('hidden');
+        stageLoadingOverlay.classList.remove('flex');
+        renderMockupBtn.disabled = false;
+        renderBtnText.textContent = "เรนเดอร์ภาพม็อกอัพ HD (Composite Mockup)";
+      }
+    }
+
+    function addToGallery(item) {
+      state.recentRenders.unshift(item);
+      galleryCount.textContent = `${state.recentRenders.length} ภาพ`;
+      
+      galleryStrip.innerHTML = '';
+      state.recentRenders.slice(0, 8).forEach(render => {
+        const thumb = document.createElement('div');
+        thumb.className = "flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border border-black/10 dark:border-white/10 cursor-pointer hover:scale-105 transition-all shadow-xs relative group";
+        thumb.innerHTML = `
+          <img src="${render.url}" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+            <span class="material-symbols-outlined text-[16px]">visibility</span>
+          </div>
+        `;
+        thumb.addEventListener('click', () => {
+          mainStageImg.src = render.url;
+          downloadMockupBtn.href = render.url;
+          downloadMockupBtn.download = render.filename;
+        });
+        galleryStrip.appendChild(thumb);
+      });
+    }
+
+    // 1-Click Quick Demo Button
+    const quickDemoBtn = document.getElementById('quickDemoBtn');
+    quickDemoBtn.addEventListener('click', () => {
+      // Pick random sample and random preset
+      const sampleBtns = document.querySelectorAll('#samplesList button');
+      if (sampleBtns.length > 0) {
+        const rIndex = Math.floor(Math.random() * sampleBtns.length);
+        sampleBtns[rIndex].click();
+      }
+      const presetCards = document.querySelectorAll('#presetsGrid > div');
+      if (presetCards.length > 0) {
+        const pIndex = Math.floor(Math.random() * presetCards.length);
+        presetCards[pIndex].click();
+      }
+      setTimeout(() => {
+        renderMockupBtn.click();
+      }, 300);
+    });
+
+    // Initialize Page
+    loadSamples();
+    loadPresets();
+  </script>
+</body>
+</html>
