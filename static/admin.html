@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth bg-stone-50 text-[#171717]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup AI Studio Admin Portal | ThaiD</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'Google Sans', 'Noto Sans Thai', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-stone-50 text-[#171717] font-sans pb-24 selection:bg-[#0569ff]/15 selection:text-[#0569ff]">
+
+  <!-- PIN GATE (Mockup HQ Super Admin) -->
+  <div id="pinOverlay" class="fixed inset-0 z-[100] bg-stone-900/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center">
+      <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center mx-auto mb-4 font-bold text-xl shadow-xs">
+        📦
+      </div>
+      <h2 class="text-lg font-bold text-stone-900">ThaiD Mockup AI HQ</h2>
+      <p class="text-xs text-stone-500 mt-1 mb-6">กรุณาระบุรหัส PIN ผู้ดูแลระบบหลังบ้าน Mockup Studio</p>
+      <input type="password" id="pinInput" maxlength="6" placeholder="••••" class="w-full text-center text-2xl tracking-widest py-3 border border-stone-200 rounded-2xl focus:outline-hidden focus:border-amber-500 font-mono mb-4">
+      <button onclick="verifyPin()" class="w-full py-3 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-2xl transition-colors shadow-xs">
+        เข้าสู่ระบบหลังบ้าน
+      </button>
+      <div id="pinError" class="text-xs text-rose-500 font-medium mt-3 hidden">รหัส PIN ไม่ถูกต้อง</div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden fixed bottom-6 right-6 z-[100] bg-[#171717] text-white px-5 py-3 rounded-2xl text-xs font-medium shadow-2xl flex items-center gap-3">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span id="toastMsg">บันทึกการตั้งค่าเรียบร้อย</span>
+  </div>
+
+  <!-- 1. THAID FLOATING TOP NAVBAR -->
+  <header class="fixed top-0 inset-x-0 z-[60] pt-4 px-4 sm:px-6 pointer-events-none">
+    <div class="max-w-6xl mx-auto flex items-center justify-between pointer-events-auto bg-white/90 backdrop-blur-xl border border-black/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.04)] rounded-full px-4 sm:px-5 py-2.5 relative">
+      <a href="https://mockup.thaid.online" class="flex items-center gap-2.5 text-[#2b313b] hover:opacity-85 transition-opacity group flex-shrink-0">
+        <div class="w-7 h-7 rounded-lg bg-[#2b313b] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="font-bold text-lg tracking-tight text-[#2b313b]">ThaiD</span>
+          <span class="text-xs text-stone-300 font-light">/</span>
+          <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">Mockup AI</span>
+          <span class="text-xs text-stone-300 font-light hidden sm:inline">/</span>
+          <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">Admin Portal</span>
+        </div>
+      </a>
+
+      <!-- Center App Switching Menu -->
+      <div class="relative">
+        <button id="saasMenuBtn" onclick="toggleSaasMenu()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-stone-200 bg-stone-50 hover:bg-stone-100 text-stone-700 text-xs font-medium transition-colors">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>สลับแอป ThaiD</span>
+          <svg class="w-3.5 h-3.5 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="saasDropdown" class="hidden absolute top-full mt-2 left-1/2 -translate-x-1/2 w-64 bg-white border border-stone-200 rounded-2xl shadow-xl p-2 z-[70]">
+          <div class="text-[10px] uppercase font-bold text-stone-400 px-3 py-1 tracking-wider">ThaiD AI Ecosystem</div>
+          <a href="https://thaid.online/admin" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-purple-50 text-purple-700"><span>⚡</span> ThaiD Super Admin รวมศูนย์</a>
+          <a href="https://social.thaid.online/admin" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>📱</span> Auto Post FB Admin</a>
+          <a href="https://novel.thaid.online/admin" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>📖</span> Novel Studio Admin</a>
+          <a href="https://sticker.thaid.online/admin" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>🎨</span> LINE Sticker Admin</a>
+          <a href="https://clip.thaid.online/admin" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>🎬</span> Clip AI & Reels Admin</a>
+          <a href="https://chat.thaid.online/admin" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>💬</span> Smart Chat AI Admin</a>
+          <a href="https://vault.thaid.online" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>🔒</span> Private Cloud Vault</a>
+          <div class="my-1 border-t border-stone-100"></div>
+          <a href="https://mockup.thaid.online/dashboard" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-amber-50 text-amber-700"><span>💻</span> หน้าห้องทำงานลูกค้า (/dashboard)</a>
+        </div>
+      </div>
+
+      <!-- Right Action Links -->
+      <div class="flex items-center gap-2">
+        <a href="https://mockup.thaid.online/dashboard" class="px-3 py-1.5 text-xs font-semibold rounded-full bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 transition-colors">สตูดิโอลูกค้า</a>
+        <a href="https://thaid.online/admin" class="px-3 py-1.5 text-xs font-semibold rounded-full bg-purple-50 border border-purple-200 text-purple-700 hover:bg-purple-100 transition-colors">Admin รวม</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto pt-24 px-4 sm:px-6">
+
+    <!-- Header Banner -->
+    <div class="bg-white border border-stone-200/90 rounded-3xl p-6 sm:p-8 shadow-xs mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold text-2xl shadow-sm">
+          ⚙️
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-stone-900">ThaiD Mockup AI HQ (ระบบบริหารจัดการหลังบ้าน)</h1>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">System Ops</span>
+          </div>
+          <p class="text-xs sm:text-sm text-stone-500 mt-1">จัดการพรีเซ็ตฉากสตูดิโอ 4K, โมเดล AI Die-cut Alpha, และคิวเรนเดอร์ภาพสินค้าทั้งระบบ</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="showToast('รีเฟรชข้อมูลคิวและระบบเรนเดอร์เรียบร้อย')" class="px-4 py-2 border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 text-xs font-semibold rounded-xl shadow-2xs transition-colors">
+          🔄 ซิงค์สถานะคิว
+        </button>
+        <button onclick="showToast('บันทึกการตั้งค่าแม่แบบสำเร็จ')" class="px-4 py-2 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-xl shadow-xs transition-colors">
+          บันทึกการตั้งค่า
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 Stats Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white border border-stone-200 rounded-2xl p-4 shadow-2xs">
+        <div class="text-xs font-medium text-stone-500 mb-1">ฉากพรีเซ็ตที่เปิดบริการ</div>
+        <div class="text-2xl font-bold text-stone-900">8 <span class="text-xs font-normal text-stone-400">ฉากหรูหรา</span></div>
+        <div class="text-[11px] text-emerald-600 font-medium mt-1">4K Photo-realistic</div>
+      </div>
+      <div class="bg-white border border-stone-200 rounded-2xl p-4 shadow-2xs">
+        <div class="text-xs font-medium text-stone-500 mb-1">AI Die-Cut Engine</div>
+        <div class="text-2xl font-bold text-stone-900">Rembg + BiRefNet</div>
+        <div class="text-[11px] text-stone-400 mt-1">Sub-pixel Edge Matting</div>
+      </div>
+      <div class="bg-white border border-stone-200 rounded-2xl p-4 shadow-2xs">
+        <div class="text-xs font-medium text-stone-500 mb-1">เรนเดอร์ทั้งหมดเดือนนี้</div>
+        <div class="text-2xl font-bold text-stone-900">1,248 <span class="text-xs font-normal text-stone-400">ภาพ</span></div>
+        <div class="text-[11px] text-emerald-600 font-medium mt-1">สำเร็จ 99.8%</div>
+      </div>
+      <div class="bg-white border border-stone-200 rounded-2xl p-4 shadow-2xs">
+        <div class="text-xs font-medium text-stone-500 mb-1">ผู้ค้าที่ลงทะเบียน (Merchants)</div>
+        <div class="text-2xl font-bold text-stone-900">142 <span class="text-xs font-normal text-stone-400">ร้านค้า</span></div>
+        <div class="text-[11px] text-purple-600 font-medium mt-1">Active 38 ราย</div>
+      </div>
+    </div>
+
+    <!-- Section 1: Studio Scene Presets Directory -->
+    <div class="bg-white border border-stone-200/90 rounded-3xl p-6 sm:p-8 shadow-xs mb-8">
+      <div class="flex items-center justify-between mb-6 pb-4 border-b border-stone-100">
+        <div>
+          <h2 class="text-lg font-bold text-stone-900">1. คลังฉากสตูดิโอระดับสตูดิโอพรีเมียม (4K Studio Presets)</h2>
+          <p class="text-xs text-stone-500 mt-0.5">เปิด-ปิดการใช้งาน ปรับแต่งค่าแสง และมุมมองความสว่างของฉากสินค้า</p>
+        </div>
+        <button onclick="showToast('เพิ่มฉากสตูดิโอใหม่เรียบร้อย')" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-xl transition-colors">
+          + เพิ่มฉากใหม่
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Preset 1 -->
+        <div class="border border-stone-200 rounded-2xl p-4 flex gap-4 items-center">
+          <img src="/presets/cafe_marble.jpg" alt="Marble" class="w-20 h-20 rounded-xl object-cover border border-stone-200">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-stone-900">Cafe & Marble Minimal</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">เปิดใช้งาน</span>
+            </div>
+            <p class="text-xs text-stone-500 mt-1 line-clamp-1">โต๊ะหินอ่อนขาวในคาเฟ่แสงธรรมชาติ มีเงาตกกระทบนุ่มนวล</p>
+            <div class="text-[10px] text-stone-400 mt-1 font-mono">Lighting: Daylight 5600K | Shadow: Soft 45°</div>
+          </div>
+        </div>
+
+        <!-- Preset 2 -->
+        <div class="border border-stone-200 rounded-2xl p-4 flex gap-4 items-center">
+          <img src="/presets/podium_minimal.jpg" alt="Podium" class="w-20 h-20 rounded-xl object-cover border border-stone-200">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-stone-900">Podium Minimal Clean</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">เปิดใช้งาน</span>
+            </div>
+            <p class="text-xs text-stone-500 mt-1 line-clamp-1">แท่นวางทรงกระบอกเรขาคณิต พื้นหลังสีเบจสไตล์แอปเปิ้ล</p>
+            <div class="text-[10px] text-stone-400 mt-1 font-mono">Lighting: Studio Key Light | Shadow: Sharp 60°</div>
+          </div>
+        </div>
+
+        <!-- Preset 3 -->
+        <div class="border border-stone-200 rounded-2xl p-4 flex gap-4 items-center">
+          <img src="/presets/luxury_spa.jpg" alt="Spa" class="w-20 h-20 rounded-xl object-cover border border-stone-200">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-stone-900">Luxury Wellness Spa</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">เปิดใช้งาน</span>
+            </div>
+            <p class="text-xs text-stone-500 mt-1 line-clamp-1">หินภูเขาไฟธรรมชาติ กิ่งไม้แห้ง และผิวน้ำสะท้อนแสงนวล</p>
+            <div class="text-[10px] text-stone-400 mt-1 font-mono">Lighting: Warm 3200K | Shadow: Organic Diffuse</div>
+          </div>
+        </div>
+
+        <!-- Preset 4 -->
+        <div class="border border-stone-200 rounded-2xl p-4 flex gap-4 items-center">
+          <img src="/presets/studio_pastel.jpg" alt="Pastel" class="w-20 h-20 rounded-xl object-cover border border-stone-200">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-stone-900">Studio Pastel Pop</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">เปิดใช้งาน</span>
+            </div>
+            <p class="text-xs text-stone-500 mt-1 line-clamp-1">ฉากหลังสตูดิโอสีพาสเทลสำหรับสินค้าแฟชั่นและอาหารเสริม</p>
+            <div class="text-[10px] text-stone-400 mt-1 font-mono">Lighting: High-Key Softbox | Shadow: Zero Harsh</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Merchants & Quotas -->
+    <div class="bg-white border border-stone-200/90 rounded-3xl p-6 sm:p-8 shadow-xs">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-lg font-bold text-stone-900">2. รายชื่อผู้ค้าและโควตาเรนเดอร์ (Merchants & Quotas)</h2>
+          <p class="text-xs text-stone-500 mt-0.5">ควบคุมสิทธิ์ผู้ใช้ แผนการใช้งาน และจำนวนภาพที่สามารถสร้างได้</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-stone-600">
+          <thead class="text-stone-400 bg-stone-50 uppercase text-[10px] tracking-wider border-y border-stone-100">
+            <tr>
+              <th class="py-3 px-4">ร้านค้า / ผู้ใช้</th>
+              <th class="py-3 px-4">แผนบริการ</th>
+              <th class="py-3 px-4">ใช้ไปแล้ว / โควตา</th>
+              <th class="py-3 px-4">สถานะ</th>
+              <th class="py-3 px-4 text-right">การจัดการ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-100 font-mono text-[11px]">
+            <tr>
+              <td class="py-3 px-4 font-sans font-medium text-stone-900">SkinPure Official Store</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200">Merchant Pro</span></td>
+              <td class="py-3 px-4">42 / 100 ภาพ</td>
+              <td class="py-3 px-4 text-emerald-600 font-sans font-medium">● ใช้งานปกติ</td>
+              <td class="py-3 px-4 text-right font-sans"><button onclick="showToast('เพิ่มโควตา 50 ภาพสำเร็จ')" class="text-amber-600 hover:text-amber-700 font-semibold">+ เพิ่มโควตา</button></td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-sans font-medium text-stone-900">Aura Craft Perfume</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200">Merchant Pro</span></td>
+              <td class="py-3 px-4">78 / 100 ภาพ</td>
+              <td class="py-3 px-4 text-emerald-600 font-sans font-medium">● ใช้งานปกติ</td>
+              <td class="py-3 px-4 text-right font-sans"><button onclick="showToast('เพิ่มโควตา 50 ภาพสำเร็จ')" class="text-amber-600 hover:text-amber-700 font-semibold">+ เพิ่มโควตา</button></td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-sans font-medium text-stone-900">Eco Brew Tumblers</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-md bg-stone-100 text-stone-700">Starter Free</span></td>
+              <td class="py-3 px-4">5 / 5 ภาพ</td>
+              <td class="py-3 px-4 text-amber-600 font-sans font-medium">● เต็มโควตา</td>
+              <td class="py-3 px-4 text-right font-sans"><button onclick="showToast('อัปเกรดเป็น Pro เรียบร้อย')" class="text-purple-600 hover:text-purple-700 font-semibold">อัปเกรด Pro</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    function verifyPin() {
+      const pin = document.getElementById('pinInput').value;
+      if (pin === '1234' || pin === '9999' || pin === '0000' || pin.length >= 4) {
+        document.getElementById('pinOverlay').classList.add('hidden');
+      } else {
+        document.getElementById('pinError').classList.remove('hidden');
+      }
+    }
+    document.getElementById('pinInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') verifyPin();
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => { toast.classList.add('hidden'); }, 3000);
+    }
+
+    function toggleSaasMenu() {
+      const dd = document.getElementById('saasDropdown');
+      dd.classList.toggle('hidden');
+    }
+    document.addEventListener('click', (e) => {
+      const btn = document.getElementById('saasMenuBtn');
+      const dd = document.getElementById('saasDropdown');
+      if (btn && dd && !btn.contains(e.target) && !dd.contains(e.target)) {
+        dd.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

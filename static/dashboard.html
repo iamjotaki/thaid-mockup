@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth bg-stone-50 text-[#171717]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทำงาน (Workspace) | ThaiD Mockup AI Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'Google Sans', 'Noto Sans Thai', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-stone-50 text-[#171717] font-sans pb-24 selection:bg-[#0569ff]/15 selection:text-[#0569ff]">
+
+  <!-- Toast -->
+  <div id="toast" class="hidden fixed bottom-6 right-6 z-[100] bg-[#171717] text-white px-5 py-3 rounded-2xl text-xs font-medium shadow-2xl flex items-center gap-3">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span id="toastMsg">บันทึกเรียบร้อย</span>
+  </div>
+
+  <!-- 1. THAID FLOATING TOP NAVBAR -->
+  <header class="fixed top-0 inset-x-0 z-[60] pt-4 px-4 sm:px-6 pointer-events-none">
+    <div class="max-w-6xl mx-auto flex items-center justify-between pointer-events-auto bg-white/90 backdrop-blur-xl border border-black/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.04)] rounded-full px-4 sm:px-5 py-2.5 relative">
+      <a href="https://mockup.thaid.online" class="flex items-center gap-2.5 text-[#2b313b] hover:opacity-85 transition-opacity group flex-shrink-0">
+        <div class="w-7 h-7 rounded-lg bg-[#2b313b] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="font-bold text-lg tracking-tight text-[#2b313b]">ThaiD</span>
+          <span class="text-xs text-stone-300 font-light">/</span>
+          <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">Mockup AI</span>
+          <span class="text-xs text-stone-300 font-light hidden sm:inline">/</span>
+          <span class="text-xs text-stone-500 font-medium hidden sm:inline">ห้องสร้างภาพสินค้า (Workspace)</span>
+        </div>
+      </a>
+
+      <!-- Center App Switching Menu -->
+      <div class="relative">
+        <button id="saasMenuBtn" onclick="toggleSaasMenu()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-stone-200 bg-stone-50 hover:bg-stone-100 text-stone-700 text-xs font-medium transition-colors">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>สลับแอป ThaiD</span>
+          <svg class="w-3.5 h-3.5 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="saasDropdown" class="hidden absolute top-full mt-2 left-1/2 -translate-x-1/2 w-64 bg-white border border-stone-200 rounded-2xl shadow-xl p-2 z-[70]">
+          <div class="text-[10px] uppercase font-bold text-stone-400 px-3 py-1 tracking-wider">ThaiD AI Ecosystem</div>
+          <a href="https://thaid.online" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>🏠</span> หน้าหลัก ThaiD.online</a>
+          <a href="https://social.thaid.online/dashboard" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>📱</span> Auto Post FB & Fanpage</a>
+          <a href="https://novel.thaid.online/dashboard" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>📖</span> Novel Studio AI</a>
+          <a href="https://sticker.thaid.online/dashboard" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>🎨</span> LINE Sticker Studio</a>
+          <a href="https://clip.thaid.online/dashboard" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>🎬</span> Clip AI & Reels</a>
+          <a href="https://chat.thaid.online/dashboard" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>💬</span> Smart Chat AI Assistant</a>
+          <a href="https://vault.thaid.online" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-stone-50 text-stone-700"><span>🔒</span> Private Cloud Vault</a>
+          <div class="my-1 border-t border-stone-100"></div>
+          <a href="https://mockup.thaid.online/admin" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-amber-50 text-amber-700"><span>⚙️</span> หลังบ้านแอดมิน (Mockup HQ)</a>
+        </div>
+      </div>
+
+      <!-- User Nav right -->
+      <div class="flex items-center gap-2">
+        <a href="https://mockup.thaid.online" class="px-3 py-1.5 text-xs font-medium text-stone-600 hover:text-stone-900 transition-colors">สตูดิโอสร้าง</a>
+        <a href="https://mockup.thaid.online/admin" class="px-3 py-1.5 text-xs font-semibold rounded-full bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 transition-colors">หลังบ้าน</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto pt-24 px-4 sm:px-6">
+
+    <!-- Hero Profile & Credit summary -->
+    <div class="bg-white border border-stone-200/90 rounded-3xl p-6 sm:p-8 shadow-xs mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold text-2xl shadow-sm">
+          📦
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-stone-900">คลังภาพสินค้าและม็อกอัปของฉัน</h1>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Merchant Pro</span>
+          </div>
+          <p class="text-xs sm:text-sm text-stone-500 mt-1">จัดการภาพสินค้าตัดพื้นหลังอัตโนมัติ, ม็อกอัป 4K ฉากหรูหรา และรูปภาพพร้อมโพสต์ Shopee / Lazada</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 bg-stone-50 border border-stone-200 rounded-2xl p-4 self-start md:self-auto">
+        <div class="text-right">
+          <div class="text-[11px] font-medium text-stone-500">โควตาเรนเดอร์ 4K คงเหลือ</div>
+          <div class="text-2xl font-bold text-amber-600 tracking-tight">85 <span class="text-xs font-normal text-stone-400">/ 100 ภาพ</span></div>
+        </div>
+        <a href="https://mockup.thaid.online" class="px-4 py-2 bg-stone-900 hover:bg-black text-white text-xs font-semibold rounded-xl shadow-xs transition-colors">
+          + สตูดิโอสร้าง
+        </a>
+      </div>
+    </div>
+
+    <!-- 4 Stats Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white border border-stone-200 rounded-2xl p-4 shadow-2xs">
+        <div class="text-xs font-medium text-stone-500 mb-1">ภาพที่เรนเดอร์สำเร็จ</div>
+        <div class="text-2xl font-bold text-stone-900">42 <span class="text-xs font-normal text-stone-400">รูป</span></div>
+        <div class="text-[11px] text-emerald-600 font-medium mt-1">ความละเอียด 4K Ultra HD</div>
+      </div>
+      <div class="bg-white border border-stone-200 rounded-2xl p-4 shadow-2xs">
+        <div class="text-xs font-medium text-stone-500 mb-1">สินค้าตัดพื้นหลังแล้ว</div>
+        <div class="text-2xl font-bold text-stone-900">18 <span class="text-xs font-normal text-stone-400">ชิ้น</span></div>
+        <div class="text-[11px] text-stone-400 mt-1">AI Die-cut Alpha PNG</div>
+      </div>
+      <div class="bg-white border border-stone-200 rounded-2xl p-4 shadow-2xs">
+        <div class="text-xs font-medium text-stone-500 mb-1">ฉากโปรดที่ใช้บ่อย</div>
+        <div class="text-2xl font-bold text-stone-900">Cafe & Marble</div>
+        <div class="text-[11px] text-amber-600 font-medium mt-1">สไตล์มินิมอลยอดนิยม</div>
+      </div>
+      <div class="bg-white border border-stone-200 rounded-2xl p-4 shadow-2xs">
+        <div class="text-xs font-medium text-stone-500 mb-1">สถานะระบบเรนเดอร์</div>
+        <div class="text-2xl font-bold text-emerald-600 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span> พร้อมทำงาน
+        </div>
+        <div class="text-[11px] text-stone-400 mt-1">ความเร็วเฉลี่ย 3.4 วิ/ภาพ</div>
+      </div>
+    </div>
+
+    <!-- Active Mockup Gallery Grid -->
+    <div class="bg-white border border-stone-200/90 rounded-3xl p-6 sm:p-8 shadow-xs mb-8">
+      <div class="flex items-center justify-between mb-6 pb-4 border-b border-stone-100">
+        <div>
+          <h2 class="text-lg font-bold text-stone-900">ม็อกอัปที่สร้างล่าสุด (Recent Mockups)</h2>
+          <p class="text-xs text-stone-500 mt-0.5">คลิกเพื่อดูภาพขนาดเต็ม ดาวน์โหลด หรือเปลี่ยนฉากสตูดิโอใหม่</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200">ทั้งหมด (42)</button>
+          <button class="px-3 py-1.5 text-xs font-medium rounded-lg text-stone-500 hover:bg-stone-100">อัตราส่วน 1:1</button>
+          <button class="px-3 py-1.5 text-xs font-medium rounded-lg text-stone-500 hover:bg-stone-100">อัตราส่วน 4:5</button>
+          <button class="px-3 py-1.5 text-xs font-medium rounded-lg text-stone-500 hover:bg-stone-100">อัตราส่วน 9:16</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <!-- Mockup Card 1 -->
+        <div class="group border border-stone-200 rounded-2xl overflow-hidden hover:border-amber-400 hover:shadow-md transition-all">
+          <div class="aspect-square bg-stone-100 relative overflow-hidden flex items-center justify-center">
+            <img src="/presets/cafe_marble.jpg" alt="Cafe Marble Mockup" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2.5 right-2.5 bg-black/75 backdrop-blur-md text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">1:1 Square</span>
+          </div>
+          <div class="p-3.5 bg-white">
+            <div class="font-bold text-xs text-stone-900 truncate">เซรั่มบำรุงผิว - คาเฟ่ลายหินอ่อน</div>
+            <div class="text-[11px] text-stone-400 mt-0.5">สร้างเมื่อ 10 นาทีที่แล้ว</div>
+            <div class="mt-3 flex items-center justify-between pt-2 border-t border-stone-100">
+              <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">4K พร้อมใช้</span>
+              <a href="/presets/cafe_marble.jpg" download class="text-xs font-semibold text-amber-600 hover:text-amber-700">ดาวน์โหลด ⬇</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mockup Card 2 -->
+        <div class="group border border-stone-200 rounded-2xl overflow-hidden hover:border-amber-400 hover:shadow-md transition-all">
+          <div class="aspect-square bg-stone-100 relative overflow-hidden flex items-center justify-center">
+            <img src="/presets/podium_minimal.jpg" alt="Podium Minimal Mockup" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2.5 right-2.5 bg-black/75 backdrop-blur-md text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">1:1 Square</span>
+          </div>
+          <div class="p-3.5 bg-white">
+            <div class="font-bold text-xs text-stone-900 truncate">น้ำหอมพรีเมียม - แท่นโพเดียมโมเดิร์น</div>
+            <div class="text-[11px] text-stone-400 mt-0.5">สร้างเมื่อ 2 ชั่วโมงที่แล้ว</div>
+            <div class="mt-3 flex items-center justify-between pt-2 border-t border-stone-100">
+              <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">4K พร้อมใช้</span>
+              <a href="/presets/podium_minimal.jpg" download class="text-xs font-semibold text-amber-600 hover:text-amber-700">ดาวน์โหลด ⬇</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mockup Card 3 -->
+        <div class="group border border-stone-200 rounded-2xl overflow-hidden hover:border-amber-400 hover:shadow-md transition-all">
+          <div class="aspect-square bg-stone-100 relative overflow-hidden flex items-center justify-center">
+            <img src="/presets/luxury_spa.jpg" alt="Luxury Spa Mockup" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2.5 right-2.5 bg-black/75 backdrop-blur-md text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">4:5 IG / Shopee</span>
+          </div>
+          <div class="p-3.5 bg-white">
+            <div class="font-bold text-xs text-stone-900 truncate">ครีมสปา - บรรยากาศผ่อนคลาย</div>
+            <div class="text-[11px] text-stone-400 mt-0.5">สร้างเมื่อเมื่อวานนี้</div>
+            <div class="mt-3 flex items-center justify-between pt-2 border-t border-stone-100">
+              <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">4K พร้อมใช้</span>
+              <a href="/presets/luxury_spa.jpg" download class="text-xs font-semibold text-amber-600 hover:text-amber-700">ดาวน์โหลด ⬇</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mockup Card 4 -->
+        <div class="group border border-stone-200 rounded-2xl overflow-hidden hover:border-amber-400 hover:shadow-md transition-all">
+          <div class="aspect-square bg-stone-100 relative overflow-hidden flex items-center justify-center">
+            <img src="/presets/studio_pastel.jpg" alt="Pastel Studio Mockup" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2.5 right-2.5 bg-black/75 backdrop-blur-md text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">9:16 TikTok / Reels</span>
+          </div>
+          <div class="p-3.5 bg-white">
+            <div class="font-bold text-xs text-stone-900 truncate">อาหารเสริม - โทนพาสเทลสดใส</div>
+            <div class="text-[11px] text-stone-400 mt-0.5">สร้างเมื่อ 3 วันที่แล้ว</div>
+            <div class="mt-3 flex items-center justify-between pt-2 border-t border-stone-100">
+              <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">4K พร้อมใช้</span>
+              <a href="/presets/studio_pastel.jpg" download class="text-xs font-semibold text-amber-600 hover:text-amber-700">ดาวน์โหลด ⬇</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Cutouts Asset Library -->
+    <div class="bg-white border border-stone-200/90 rounded-3xl p-6 sm:p-8 shadow-xs">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-lg font-bold text-stone-900">คลังสินค้าไดคัตของฉัน (Cutout Asset Library)</h2>
+          <p class="text-xs text-stone-500 mt-0.5">รูปสินค้าโปร่งใส (Alpha Transparent PNG) พร้อมนำไปสลับฉากหลังได้ทันที</p>
+        </div>
+        <a href="https://mockup.thaid.online" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-xl transition-colors">
+          + อัปโหลดสินค้าใหม่
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 pt-2">
+        <div class="border border-stone-200 rounded-xl p-3 flex flex-col items-center bg-stone-50/50 hover:border-amber-300">
+          <div class="w-16 h-16 flex items-center justify-center p-2 mb-2">
+            <img src="/samples/skincare_serum.png" alt="Serum" class="max-h-full max-w-full object-contain">
+          </div>
+          <div class="text-xs font-bold text-stone-800 text-center truncate w-full">เซรั่มขวดแก้ว</div>
+          <div class="text-[10px] text-stone-400">PNG โปร่งใส</div>
+        </div>
+        <div class="border border-stone-200 rounded-xl p-3 flex flex-col items-center bg-stone-50/50 hover:border-amber-300">
+          <div class="w-16 h-16 flex items-center justify-center p-2 mb-2">
+            <img src="/samples/perfume_bottle.png" alt="Perfume" class="max-h-full max-w-full object-contain">
+          </div>
+          <div class="text-xs font-bold text-stone-800 text-center truncate w-full">ขวดน้ำหอมหรู</div>
+          <div class="text-[10px] text-stone-400">PNG โปร่งใส</div>
+        </div>
+        <div class="border border-stone-200 rounded-xl p-3 flex flex-col items-center bg-stone-50/50 hover:border-amber-300">
+          <div class="w-16 h-16 flex items-center justify-center p-2 mb-2">
+            <img src="/samples/coffee_tumbler.png" alt="Tumbler" class="max-h-full max-w-full object-contain">
+          </div>
+          <div class="text-xs font-bold text-stone-800 text-center truncate w-full">แก้วกาแฟเก็บเย็น</div>
+          <div class="text-[10px] text-stone-400">PNG โปร่งใส</div>
+        </div>
+        <div class="border border-stone-200 rounded-xl p-3 flex flex-col items-center bg-stone-50/50 hover:border-amber-300">
+          <div class="w-16 h-16 flex items-center justify-center p-2 mb-2">
+            <img src="/samples/cosmetic_jar.png" alt="Jar" class="max-h-full max-w-full object-contain">
+          </div>
+          <div class="text-xs font-bold text-stone-800 text-center truncate w-full">กระปุกครีมมินิมอล</div>
+          <div class="text-[10px] text-stone-400">PNG โปร่งใส</div>
+        </div>
+        <div class="border border-stone-200 rounded-xl p-3 flex flex-col items-center bg-stone-50/50 hover:border-amber-300">
+          <div class="w-16 h-16 flex items-center justify-center p-2 mb-2">
+            <img src="/samples/supplement_bottle.png" alt="Supplement" class="max-h-full max-w-full object-contain">
+          </div>
+          <div class="text-xs font-bold text-stone-800 text-center truncate w-full">ขวดอาหารเสริม</div>
+          <div class="text-[10px] text-stone-400">PNG โปร่งใส</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    function toggleSaasMenu() {
+      const dd = document.getElementById('saasDropdown');
+      dd.classList.toggle('hidden');
+    }
+    document.addEventListener('click', (e) => {
+      const btn = document.getElementById('saasMenuBtn');
+      const dd = document.getElementById('saasDropdown');
+      if (btn && dd && !btn.contains(e.target) && !dd.contains(e.target)) {
+        dd.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
